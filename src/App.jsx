@@ -1,4 +1,3 @@
-// App.jsx
 import { useState } from "react";
 
 export default function App() {
@@ -27,51 +26,156 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
-      <div className="bg-white shadow-lg rounded-2xl p-6 w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-4 text-center">📝 To-Do List</h1>
+    <div>
+      {/* Bring over your CSS */}
+      <style>{`
+        :root {
+          --bg: #0b0f14;
+          --card: #111827;
+          --text: #e6edf3;
+          --muted: #9aa4b2;
+          --accent: #6ee7b7;
+          --accent-2: #60a5fa;
+          --radius: 14px;
+          --shadow: 0 8px 24px rgba(0,0,0,0.35);
+          --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial;
+        }
+        * { box-sizing: border-box; }
+        body {
+          margin:0;
+          font-family: var(--font);
+          background: radial-gradient(1200px 600px at 20% -10%, rgba(96,165,250,.12), transparent 60%),
+                      radial-gradient(900px 500px at 120% 10%, rgba(110,231,183,.10), transparent 55%),
+                      var(--bg);
+          color: var(--text);
+          display:flex;
+          justify-content:center;
+          align-items:center;
+          min-height:100vh;
+          padding:20px;
+        }
+        .box {
+          background: var(--card);
+          border: 1px solid rgba(255,255,255,.05);
+          border-radius: var(--radius);
+          padding: 40px 28px;
+          box-shadow: var(--shadow);
+          width:100%;
+          max-width:420px;
+          text-align:center;
+        }
+        h1 {
+          margin:0 0 20px;
+          font-size: 26px;
+          font-weight:700;
+          letter-spacing:.3px;
+        }
+        form {
+          display:flex;
+          gap:10px;
+        }
+        input {
+          flex:1;
+          padding:12px 14px;
+          border-radius: var(--radius);
+          border:0;
+          outline:0;
+          font-size:15px;
+          background:#0e1622;
+          color:var(--text);
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+        }
+        button {
+          padding:12px 20px;
+          border-radius: var(--radius);
+          border:0;
+          font-weight:700;
+          background: linear-gradient(135deg,var(--accent),var(--accent-2));
+          color:#0b1020;
+          cursor:pointer;
+          opacity:1;
+        }
+        button:disabled {
+          cursor:not-allowed;
+          opacity:.6;
+        }
+        ul {
+          list-style:none;
+          margin:20px 0 0;
+          padding:0;
+          text-align:left;
+        }
+        li {
+          background:#0e1622;
+          border-radius: var(--radius);
+          padding:10px 14px;
+          display:flex;
+          align-items:center;
+          justify-content:space-between;
+          margin-bottom:10px;
+          box-shadow: inset 0 0 0 1px rgba(255,255,255,.08);
+        }
+        li span {
+          flex:1;
+          cursor:pointer;
+        }
+        li span.completed {
+          text-decoration: line-through;
+          color: var(--muted);
+        }
+        li button {
+          background:none;
+          color:#f87171;
+          font-size:16px;
+          padding:4px 8px;
+          cursor:pointer;
+        }
+        li button:hover {
+          color:#ef4444;
+        }
+      `}</style>
+
+      <div className="box">
+        <h1>Welcome 👋</h1>
 
         {/* Input + Add Button */}
-        <div className="flex mb-4">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            addTask();
+          }}
+        >
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            placeholder="Enter a task..."
-            className="flex-1 border rounded-l-lg p-2 focus:outline-none"
+            placeholder="Enter your task…"
           />
-          <button
-            onClick={addTask}
-            className="bg-blue-500 text-white px-4 rounded-r-lg hover:bg-blue-600"
-          >
+          <button type="submit" disabled={!input.trim()}>
             Add
           </button>
-        </div>
+        </form>
 
         {/* Task List */}
-        <ul className="space-y-2">
+        <ul>
           {tasks.map((task) => (
-            <li
-              key={task.id}
-              className="flex justify-between items-center bg-gray-50 p-2 rounded-lg shadow-sm"
-            >
+            <li key={task.id}>
               <span
+                className={task.completed ? "completed" : ""}
                 onClick={() => toggleTask(task.id)}
-                className={`flex-1 cursor-pointer ${
-                  task.completed ? "line-through text-gray-400" : ""
-                }`}
               >
                 {task.text}
               </span>
-              <button
-                onClick={() => deleteTask(task.id)}
-                className="text-red-500 hover:text-red-700"
-              >
-                ❌
-              </button>
+              <button onClick={() => deleteTask(task.id)}>❌</button>
             </li>
           ))}
         </ul>
+
+        {tasks.length === 0 && (
+          <p style={{ marginTop: "14px", fontSize: "13px", color: "var(--muted)" }}>
+            No tasks yet. Add one above!
+          </p>
+        )}
       </div>
     </div>
   );
